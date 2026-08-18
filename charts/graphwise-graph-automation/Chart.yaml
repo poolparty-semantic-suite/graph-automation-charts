@@ -1,0 +1,29 @@
+#
+# Official Helm chart for deploying Graphiwse Automation services.
+#
+apiVersion: v2
+name: graphwise-graph-automation
+description: Umbrella chart for deploying Graphwise Graph Automation services
+type: application
+version: 0.1.0
+kubeVersion: ^1.34.0-0
+home: https://graphwise.ai/
+icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+maintainers:
+  - name: poolparty-semantic-suite
+    email: support@graphwise.ai
+    url: https://graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/graph-automation-charts
+keywords:
+  - graphwise
+  - graph
+  - automation
+  - database
+  - knowledge
+dependencies:
+  - name: graphwise-workflows
+    version: 0.2.0
+    repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
+    alias: workflows
+    condition: workflows.enabled

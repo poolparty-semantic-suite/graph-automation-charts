@@ -1,0 +1,31 @@
+-----------------------------------------------------------------------------------------------------------------------
+      _____ _____            _____  _    _              _    _ _______ ____  __  __       _______ _____ ____  _   _
+     / ____|  __ \     /\   |  __ \| |  | |        /\  | |  | |__   __/ __ \|  \/  |   /\|__   __|_   _/ __ \| \ | |
+    | |  __| |__) |   /  \  | |__) | |__| |       /  \ | |  | |  | | | |  | | \  / |  /  \  | |    | || |  | |  \| |
+    | | |_ |  _  /   / /\ \ |  ___/|  __  |      / /\ \| |  | |  | | | |  | | |\/| | / /\ \ | |    | || |  | | . ` |
+    | |__| | | \ \  / ____ \| |    | |  | |     / ____ \ |__| |  | | | |__| | |  | |/ ____ \| |   _| || |__| | |\  |
+     \_____|_|  \_\/_/    \_\_|    |_|  |_|    /_/    \_\____/   |_|  \____/|_|  |_/_/    \_\_|  |_____\____/|_| \_|
+                                                    by Graphwise
+-----------------------------------------------------------------------------------------------------------------------
+
+Chart version = {{ .Chart.Version }}
+
+{{- if .Values.workflows.enabled }}
+{{ "" }}
+Graphwise Workflows are enabled
+  url = {{ include "graphwise-workflows.external-url" .Subcharts.workflows }}
+  chart version = {{ .Subcharts.workflows.Chart.Version }}
+  image = {{ include "graphwise-workflows.image" .Subcharts.workflows }}
+  replicas = {{ .Values.workflows.replicas }}
+  task runers = {{ include "graphwise-workflows.runners.mode" .Subcharts.workflows }}
+    {{- if .Values.workflows.runners.external }}
+    image = {{ include "graphwise-workflows.runners.image" .Subcharts.workflows }}
+    {{- end }}
+{{- end }}
+
+** Please be patient while the chart is being deployed and services are available **
+  You can check their status with: kubectl --namespace {{ .Release.Namespace }} get pods
+
+------------------------------------------------------------------------------------------------
+For more information on configuring and running Graphwise software, visit https://graphwise.ai/
+------------------------------------------------------------------------------------------------

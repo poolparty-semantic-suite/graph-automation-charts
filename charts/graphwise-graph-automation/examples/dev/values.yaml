@@ -1,0 +1,11 @@
+workflows:
+  configuration:
+    encryption:
+      existingSecret: ""
+      autogenerate: true
+
+  runners:
+    configuration:
+      token:
+        existingSecret: ""
+        autogenerate: true

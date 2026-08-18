@@ -1,0 +1,6 @@
+dependencies:
+- name: graphwise-workflows
+  repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
+  version: 0.2.0
+digest: sha256:d61760178d25b9f1f0278c54984d51636f0e968dfcc16e5e55cf8727f563fac6
+generated: "2026-08-31T09:05:44.914990103+03:00"
