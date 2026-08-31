@@ -1,0 +1,34 @@
+apiVersion: v1
+entries:
+  graphwise-graph-automation:
+  - apiVersion: v2
+    created: "2026-08-31T06:16:01.501635748Z"
+    dependencies:
+    - alias: workflows
+      condition: workflows.enabled
+      name: graphwise-workflows
+      repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
+      version: 0.2.0
+    description: Umbrella chart for deploying Graphwise Graph Automation services
+    digest: 5bca74e45faa4f8d9725d9f02f38c96495904216be68e8aae69695286406e83c
+    home: https://graphwise.ai/
+    icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+    keywords:
+    - graphwise
+    - graph
+    - automation
+    - database
+    - knowledge
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: support@graphwise.ai
+      name: poolparty-semantic-suite
+      url: https://graphwise.ai
+    name: graphwise-graph-automation
+    sources:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-0.1.0/graphwise-graph-automation-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-08-31T06:16:01.50166436Z"
