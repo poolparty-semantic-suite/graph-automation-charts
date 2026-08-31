@@ -1,0 +1,150 @@
+###############################################################################
+# Main configuration file                                                     #
+# To override single property use --set                                       #
+# To override multiple, provide another values-override.yaml with the -f flag #
+# See https://helm.sh/docs/chart_template_guide/values_files/                 #
+###############################################################################
+
+#########################
+# Global Configurations #
+#########################
+
+global:
+  # Overrides image.registry in subcharts.
+  # Can be used to override it globally when using umbrella charts.
+  imageRegistry: ""
+
+  # Inserts additional pull secret references.
+  # Can be used to override it globally when using umbrella charts.
+  # Values are processed as Helm templates.
+  # Ref: https://kubernetes.io/docs/concepts/configuration/secret/#using-imagepullsecrets
+  #
+  # Example:
+  # imagePullSecrets:
+  #   - name: my-pull-secret
+  imagePullSecrets: []
+
+######################################
+# Graphwise Workflows Configurations #
+######################################
+
+# Configuration overrides for the Graphwise Workflows chart.
+# Ref: https://github.com/poolparty-semantic-suite/graphwise-workflows-chart
+workflows:
+  # Toggles the deployment of the GraphRAG Workflows.
+  enabled: true
+
+  # Name and name prefix for the Workflows resources.
+  fullnameOverride: graph-automation-workflows
+
+  # A commercial license key is required for using enterprise features.
+  # Ref: https://docs.n8n.io/hosting/configuration/environment-variables/licenses/#license-environment-variables
+  license:
+    existingSecret: ""
+
+  # Graphwise Workflows configuration settings.
+  configuration:
+    # The external URL at which the Workflows should be accessible.
+    externalUrl: https://platform.127.0.0.1.nip.io/automation/
+
+    # Uncomment the next section to provide configurations as environment variables.
+    # Values are processed as Helm templates.
+    # Ref: https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables
+    # environment: {}
+
+    # Encryption key for Workflows credentials.
+    # If not provided, the Workflows will generate a random key.
+    # For production, it is highly recommended to provide the key via a Secret resource.
+    # Ref: https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/deployment
+    encryption:
+      # Reference to a Secret containing a field with the encryption key.
+      existingSecret: graph-automation-workflows-encryption
+      # Name of the key in the existing Secret that contains the encryption key.
+      secretKey: N8N_ENCRYPTION_KEY
+
+    # Configurations for connecting Workflows to a PostgreSQL database.
+    # The default values are prepared for a PostgreSQL database created by the CNPG operator, see examples/postgres.
+    # Tune these according to your environment if you have your own PostgreSQL cluster.
+    # Ref: https://docs.n8n.io/hosting/configuration/environment-variables/database/#postgresql
+    postgresdb:
+      host: graph-automation-workflows-postgres-rw
+      port: 5432
+      database: graph-automation
+      credentials:
+        # Reference to a Secret containing the credentials for connecting to the PostgreSQL database.
+        # The value is processed as a Helm template.
+        existingSecret: graph-automation-workflows-postgres-app
+        # Name of the key in the existing secret that contains the username.
+        usernameKey: username
+        # Name of the key in the existing secret that contains the password.
+        passwordKey: password
+
+  # Ingress configuration for the Workflows service.
+  #
+  # By default, the Ingress is disabled, and the chart makes no assumptions of what Ingress controller is being used.
+  # It's up to you to define if you are going to directly map inbound traffic to the Service or use the Ingress.
+  #
+  # If you are using the Ingress, make sure to check for any specific annotations required by the controller
+  # implementation in your cluster, especially for subpath access.
+  #
+  # Note that to deploy the Workflows service on a subpath, depending on the Ingress controller, you have
+  # to strip out the subpath from the upstream request.
+  #
+  # See examples/nginx-ingress/ for an example of how to configure the Ingress for the Nginx Ingress Controller.
+  # See the sub chart for further details.
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+
+  persistence:
+    # We use an external database and an external Secret for the encryuptiopn key, thus no need a storage for the Workflows.
+    enabled: false
+
+  # Resource configurations for the Workflows pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+  #########################################
+  # Workflows Task Runners Configurations #
+  #########################################
+
+  # Task runners are a side-car container that runs any tasks triggered by the Code node.
+  runners:
+    # Defaulting to external task runners.
+    external: true
+
+    # Graphwise Workflows task runners configuration settings.
+    configuration:
+      # Authentication token for the Workflows task runners and the main Workflows instances.
+      token:
+        # Reference to a Secret containing a field with the authentication token.
+        # This is a mandatory secret when the runners are enabled.
+        existingSecret: graph-automation-workflows-task-runners-token
+        # Name of the key in the existing Secret that contains the authentication token.
+        tokenKey: N8N_RUNNERS_AUTH_TOKEN
+
+    persistence:
+      # Shared volume for storing data between Workflows instances and the task runners.
+      shared:
+        enabled: true
+        # Configurations for an ephemeral emptyDir volume to be used for shared data storage.
+        emptyDir:
+          sizeLimit: 1Gi
+
+    # Resource configurations for the Workflows task runners containers.
+    resources:
+      limits:
+        memory: 512Mi
+      requests:
+        memory: 256Mi
+        cpu: 100m
