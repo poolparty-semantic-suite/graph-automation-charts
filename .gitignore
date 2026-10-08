@@ -11,6 +11,7 @@
 # Helm
 charts/*.tgz
 values_overrides.yaml
+values.overrides.yaml
 template_output.yaml
 output.yaml
 *.tgz

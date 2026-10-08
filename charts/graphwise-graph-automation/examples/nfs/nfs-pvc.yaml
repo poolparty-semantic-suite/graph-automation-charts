@@ -1,0 +1,14 @@
+#
+# Example PVC for an NFS PV that can be mounted in read & write mode by multiple pods.
+#
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: graph-automation-nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs
+  resources:
+    requests:
+      storage: 10Gi
