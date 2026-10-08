@@ -29,6 +29,10 @@ Included charts:
 
 * [graphwise-graph-automation](charts/graphwise-graph-automation) - Umbrella Helm chart for deploying the Graphwise
   Graph Automation suite.
+* [graphwise-graph-automation-morphkgc](charts/graphwise-graph-automation-morphkgc) - Morph-KGC Kafka worker for
+  materializing RDF from source data.
+
+TODO chunker
 
 ## License
 

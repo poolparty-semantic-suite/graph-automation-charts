@@ -101,6 +101,20 @@ workflows:
     # We use an external database and an external Secret for the encryuptiopn key, thus no need a storage for the Workflows.
     enabled: false
 
+  # Extra volume and volume mount for a persistence layer for sharing BLOBs (files, documents etc.) between
+  # the Workflows service and Kafka workers.
+  #
+  # Important: This volume must support ReadWriteMany access mode so Kubernetes can schedule the services across
+  # different nodes and failure domains.
+  extraVolumes:
+    - name: data-share
+      persistentVolumeClaim:
+        claimName: graph-automation-nfs
+  # The Workflows write BLOBs at /data so make sure to keep this unchanged.
+  extraVolumeMounts:
+    - name: data-share
+      mountPath: /data
+
   # Resource configurations for the Workflows pods.
   resources:
     limits:
@@ -148,3 +162,61 @@ workflows:
       requests:
         memory: 256Mi
         cpu: 100m
+
+# Graphwise Graph Automation Morph-KGC Kafka worker configuration overrides.
+#
+# This service is responsible for materializing RDF knowledge graphs from source data based on mapping files.
+#
+# Ref: TODO
+morphkgc:
+  # Toggles the deployment of the GraphRAG Workflows.
+  enabled: true
+
+  # Name and name prefix for the Morph-KGC worker resources.
+  fullnameOverride: graph-automation-morphkgc
+
+  # Number of Morph-KGC Kafka worker pods to deploy.
+  replicas: 1
+
+  # Graph Automation Morph-KGC worker runtime configuration settings.
+  configuration:
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties:
+      # TODO: Very fugly service url....
+      KAFKA_BOOTSTRAP_SERVERS: graph-automation-kafka-kafka-bootstrap:9092
+      KAFKA_JOBS_TOPIC: graph-automation.morphkgc.jobs
+      KAFKA_RESULTS_TOPIC: graph-automation.morphkgc.results
+
+  # Extra volume and volume mount for a persistence layer for sharing BLOBs (files, documents etc.) between
+  # the Workflows service and Kafka workers.
+  #
+  # Important: This volume must support ReadWriteMany access mode so Kubernetes can schedule the services across
+  # different nodes and failure domains.
+  extraVolumes:
+    - name: data-share
+      persistentVolumeClaim:
+        claimName: graph-automation-nfs
+  # The Workflows write BLOBs at /data so make sure to keep this unchanged.
+  extraVolumeMounts:
+    - name: data-share
+      mountPath: /data
+
+  # Resource configurations for the Morph-KFC worker pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+#
+# TODO
+#
+chunker:
+  enabled: false

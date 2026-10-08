@@ -1,0 +1,24 @@
+apiVersion: v2
+# TODO or morph-kgc ?
+# TODO: -kafka-worker ????
+name: graphwise-graph-automation-morphkgc
+description: Morph-KGC Kafka worker for the Graphwise Graph Automation bundle
+type: application
+version: 0.1.0
+appVersion: 0.2.0
+kubeVersion: ^1.32.0-0
+home: https://graphwise.ai/
+icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+maintainers:
+  - name: poolparty-semantic-suite
+    email: support@graphwise.ai
+    url: https://graphwise.ai
+sources:
+  - https://github.com/poolparty-semantic-suite/graph-automation-charts
+keywords:
+  - graphwise
+  - graph
+  - automation
+  - database
+  - knowledge
+  - rml

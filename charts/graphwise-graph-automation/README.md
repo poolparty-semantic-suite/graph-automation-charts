@@ -33,8 +33,11 @@ Please refer to the subcharts for any additional prerequisites, dependencies and
 Check under [examples/](examples) for any sample configurations regarding this chart:
 
 1. [dev](examples/dev) - Example configurations for a local development environment with Secret generation.
-2. [nginx-ingress](examples/nginx-ingress) - Example configurations for exposing the services via Nginx Ingress.
-3. [postgres](examples/postgres) - Example configuration for a deploying a PostgreSQL database using the CNPG Operator.
+2. [kafka](examples/kafka) - Example Kafka deployment using the Strimzi operator.
+3. [kind](examples/kind) - Local Kubernetes cluster using [kind](https://kind.sigs.k8s.io/)
+4. [nfs](examples/nfs) - In-cluster NFS provider and dynamic PV provisioner
+5. [nginx-ingress](examples/nginx-ingress) - Example configurations for exposing the services via Nginx Ingress.
+6. [postgres](examples/postgres) - Example configuration for a deploying a PostgreSQL database using the CNPG Operator.
 
 ## Installation
 
@@ -42,7 +45,7 @@ Once all dependencies are installed and all secrets and configurations are creat
 with:
 
 ```shell
-helm upgrade --install --dependency-update graph-automation graphwise-graph-automation graphwise-graph-automation
+helm upgrade --install --dependency-update graph-automation graphwise-graph-automation/graphwise-graph-automation
 ```
 
 ## Uninstall

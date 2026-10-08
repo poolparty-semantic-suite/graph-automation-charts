@@ -4,6 +4,23 @@ To deploy the Graphwise Graph Automation chart, you need a PostgreSQL database a
 The [database.yaml](database.yaml) is a sample configuration for deploying a single replica PostgreSQL database using
 the [CNPG Operator](https://cloudnative-pg.io/).
 
+## CNPG
+
+You can install the [CNPG Operator](https://cloudnative-pg.io/) with:
+
+```shell
+helm repo add cnpg https://cloudnative-pg.github.io/charts || true
+helm repo update cnpg
+helm upgrade \
+  --install \
+  --namespace "${CNPG_NAMESPACE}" \
+  --create-namespace \
+  cnpg \
+  cnpg/cloudnative-pg
+```
+
+## Install
+
 To install the database in the `default` namespace, execute:
 
 ```shell
@@ -23,6 +40,8 @@ workflows:
         usernameKey: username
         passwordKey: password
 ```
+
+## Uninstall
 
 You can uninstall the database with:
 
