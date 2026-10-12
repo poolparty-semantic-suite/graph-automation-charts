@@ -1,0 +1,61 @@
+#
+# USERS
+#
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaUser
+metadata:
+  name: graph-automation-morphkgc-kafka-user
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: graph-automation.morphkgc
+          patternType: prefix
+        operations:
+          - Read
+          - Write
+          - Describe
+      - resource:
+          type: group
+          name: graph-automation.morphkgc
+          patternType: prefix
+        operations:
+          - Read
+          - Write
+          - Describe
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaUser
+metadata:
+  name: graph-automation-chunker-kafka-user
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  authentication:
+    type: scram-sha-512
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: graph-automation.chunker
+          patternType: prefix
+        operations:
+          - Read
+          - Write
+          - Describe
+      - resource:
+          type: group
+          name: graph-automation.chunker
+          patternType: prefix
+        operations:
+          - Read
+          - Write
+          - Describe

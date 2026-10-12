@@ -1,0 +1,7 @@
+# Rule: ConfigMap with sensitive content
+# Reason: We use well known ports
+KSV-01010
+
+# Rule: Restrict container images to trusted registries
+# Reason: We use a private registry
+KSV0125
