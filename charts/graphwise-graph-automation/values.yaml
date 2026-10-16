@@ -101,6 +101,21 @@ workflows:
     # We use an external database and an external Secret for the encryuptiopn key, thus no need a storage for the Workflows.
     enabled: false
 
+  # Extra volume and volume mount for a persistence layer for sharing BLOBs (files, documents etc.) between
+  # the Workflows service and Kafka workers.
+  #
+  # Important: This volume must support ReadWriteMany access mode so Kubernetes can schedule the services across
+  # different nodes and failure domains.
+  extraVolumes:
+    - name: data-share
+      persistentVolumeClaim:
+        claimName: graph-automation-nfs
+
+  # The Workflows write BLOBs at /data so make sure to keep this unchanged.
+  extraVolumeMounts:
+    - name: data-share
+      mountPath: /data
+
   # Resource configurations for the Workflows pods.
   resources:
     limits:
@@ -148,3 +163,355 @@ workflows:
       requests:
         memory: 256Mi
         cpu: 100m
+
+####################################################################
+# Graphwise Graph Automation Morph-KGC Kafka worker configurations #
+####################################################################
+
+# This service is responsible for materializing RDF knowledge graphs from source data based on mapping files.
+morphkgc:
+  # Toggles the deployment of the GraphRAG Workflows.
+  enabled: true
+
+  # Name and name prefix for the Morph-KGC worker resources.
+  nameOverride: morph-kgc
+  fullnameOverride: graph-automation-morphkgc
+
+  # Number of Morph-KGC Kafka worker pods to deploy.
+  replicas: 1
+
+  # Graph Automation Morph-KGC worker runtime configuration settings.
+  configuration:
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties:
+      KAFKA_JOBS_TOPIC: graph-automation.morphkgc.jobs
+      KAFKA_RESULTS_TOPIC: graph-automation.morphkgc.results
+
+    # Configurations for connecting to Kafka.
+    # The default values are tuned for the example Kafka instance deployed from the examples/kafka/ resources.
+    # Make sure to update them accordingly if you have an existing Kafka cluster.
+    kafka:
+      servers: graph-automation-kafka-bootstrap:9092
+      security:
+        protocol: SASL_PLAINTEXT
+        sasl:
+          mechanism: SCRAM-SHA-512
+          credentials:
+            existingSecret: graph-automation-morphkgc-kafka-user
+            username: graph-automation-morphkgc-kafka-user
+            passwordKey: password
+
+  # Existing PeristentVolumeCLaim for a persistence layer for sharing BLOBs (files, documents etc.) between
+  # the Workflows service and the Morph-KGC worker.
+  #
+  # Important: This volume must support ReadWriteMany access mode so Kubernetes can schedule the services across
+  # different nodes and failure domains.
+  #
+  # You can use the example NFS-backed PVC in the examples/nfs/ folder.
+  sharedVolume:
+    mountPath: /data
+    existingVolumeClaim:
+      claimName: graph-automation-nfs
+
+  # Resource configurations for the Morph-KFC worker pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+##################################################################
+# Graphwise Graph Automation Document Chunker API configurations #
+##################################################################
+
+chunkerAPI:
+  # Toggles the deployment of the Graph Automation Chunker API service.
+  enabled: true
+
+  # Name and name prefix for the Chunker API service resources.
+  nameOverride: chunker-api
+  fullnameOverride: graph-automation-chunker-api
+
+  # Number of Chunker API service pods to deploy.
+  replicas: 1
+
+  # Graph Automation Chunker API runtime configuration settings.
+  configuration:
+    # Chunker service mode.
+    mode: api
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties:
+      # Disables the default management control socket
+      GUNICORN_CMD_ARGS: "--no-control-socket"
+
+    # Configurations for connecting to Kafka.
+    # The default values are tuned for the example Kafka instance deployed from the examples/kafka/ resources.
+    # Make sure to update them accordingly if you have an existing Kafka cluster.
+    kafka:
+      servers: graph-automation-kafka-bootstrap:9092
+      security:
+        protocol: SASL_PLAINTEXT
+        sasl:
+          mechanism: SCRAM-SHA-512
+          credentials:
+            existingSecret: graph-automation-chunker-kafka-user
+            username: graph-automation-chunker-kafka-user
+            passwordKey: password
+
+    # Configurations for connecting the Chunker service to a PostgreSQL database.
+    postgresdb:
+      host: graph-automation-chunker-postgres-rw
+      credentials:
+        existingSecret: graph-automation-chunker-postgres-app
+        usernameKey: username
+        passwordKey: password
+
+  persistence:
+    enabled: false
+
+  uploadsVolume:
+    existingVolumeClaim:
+      claimName: graph-automation-chunker-nfs
+
+  # Resource configurations for the Chunker API pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+####################################################################
+# Graphwise Graph Automation Document Chunker Store configurations #
+####################################################################
+
+chunkerStore:
+  # Toggles the deployment of the Graph Automation Chunker Store service.
+  enabled: true
+
+  # Name and name prefix for the Chunker API service resources.
+  nameOverride: chunker-store
+  fullnameOverride: graph-automation-chunker-store
+
+  # Number of Chunker Store service pods to deploy.
+  replicas: 1
+
+  # Graph Automation Chunker Store runtime configuration settings.
+  configuration:
+    # Chunker service mode.
+    mode: store
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties: {}
+
+    # Configurations for connecting to Kafka.
+    # The default values are tuned for the example Kafka instance deployed from the examples/kafka/ resources.
+    # Make sure to update them accordingly if you have an existing Kafka cluster.
+    kafka:
+      servers: graph-automation-kafka-bootstrap:9092
+      security:
+        protocol: SASL_PLAINTEXT
+        sasl:
+          mechanism: SCRAM-SHA-512
+          credentials:
+            existingSecret: graph-automation-chunker-kafka-user
+            username: graph-automation-chunker-kafka-user
+            passwordKey: password
+
+    # Configurations for connecting the Chunker service to a PostgreSQL database.
+    postgresdb:
+      host: graph-automation-chunker-postgres-rw
+      credentials:
+        existingSecret: graph-automation-chunker-postgres-app
+        usernameKey: username
+        passwordKey: password
+
+  persistence:
+    enabled: false
+
+  uploadsVolume:
+    existingVolumeClaim:
+      claimName: graph-automation-chunker-nfs
+
+  # Resource configurations for the Chunker Store pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+  # The Chunker Store does not expose an HTTP API.
+  service:
+    enabled: false
+
+  # The Store service does not expose any health checks currently
+  startupProbe: null
+  readinessProbe: null
+  livenessProbe: null
+
+####################################################################
+# Graphwise Graph Automation Document Chunker Parse configurations #
+####################################################################
+
+chunkerParse:
+  # Toggles the deployment of the Graph Automation Chunker Parse service.
+  enabled: true
+
+  # Name and name prefix for the Chunker API service resources.
+  nameOverride: chunker-parse
+  fullnameOverride: graph-automation-chunker-parse
+
+  # Number of Chunker Parse service pods to deploy.
+  replicas: 1
+
+  # Graph Automation Chunker Parse runtime configuration settings.
+  configuration:
+    # Chunker service mode.
+    mode: parse
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties: {}
+
+    # Configurations for connecting to Kafka.
+    # The default values are tuned for the example Kafka instance deployed from the examples/kafka/ resources.
+    # Make sure to update them accordingly if you have an existing Kafka cluster.
+    kafka:
+      servers: graph-automation-kafka-bootstrap:9092
+      security:
+        protocol: SASL_PLAINTEXT
+        sasl:
+          mechanism: SCRAM-SHA-512
+          credentials:
+            existingSecret: graph-automation-chunker-kafka-user
+            username: graph-automation-chunker-kafka-user
+            passwordKey: password
+
+    # Configurations for connecting the Chunker service to a PostgreSQL database.
+    postgresdb:
+      host: graph-automation-chunker-postgres-rw
+      credentials:
+        existingSecret: graph-automation-chunker-postgres-app
+        usernameKey: username
+        passwordKey: password
+
+  persistence:
+    enabled: true
+
+  uploadsVolume:
+    existingVolumeClaim:
+      claimName: graph-automation-chunker-nfs
+
+  # Resource configurations for the Chunker Parse pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+  # The Chunker Parse does not expose an HTTP API.
+  service:
+    enabled: false
+
+  # The Parse service does not expose any health checks currently
+  startupProbe: null
+  readinessProbe: null
+  livenessProbe: null
+
+#########################################################################
+# Graphwise Graph Automation Document Chunker Sectioning configurations #
+#########################################################################
+
+chunkerSectioning:
+  # Toggles the deployment of the Graph Automation Chunker Sectioning service.
+  enabled: true
+
+  # Name and name prefix for the Chunker API service resources.
+  nameOverride: chunker-sectioning
+  fullnameOverride: graph-automation-chunker-sectioning
+
+  # Number of Chunker Sectioning service pods to deploy.
+  replicas: 1
+
+  # Graph Automation Chunker Sectioning runtime configuration settings.
+  configuration:
+    # Chunker service mode.
+    mode: sectioning
+    # Configuration properties inserted as envrionemnt variables in the container.
+    # Values are processed as Helm templates.
+    properties: {}
+
+    # Configurations for connecting to Kafka.
+    # The default values are tuned for the example Kafka instance deployed from the examples/kafka/ resources.
+    # Make sure to update them accordingly if you have an existing Kafka cluster.
+    kafka:
+      servers: graph-automation-kafka-bootstrap:9092
+      security:
+        protocol: SASL_PLAINTEXT
+        sasl:
+          mechanism: SCRAM-SHA-512
+          credentials:
+            existingSecret: graph-automation-chunker-kafka-user
+            username: graph-automation-chunker-kafka-user
+            passwordKey: password
+
+    # Configurations for connecting the Chunker service to a PostgreSQL database.
+    postgresdb:
+      host: graph-automation-chunker-postgres-rw
+      credentials:
+        existingSecret: graph-automation-chunker-postgres-app
+        usernameKey: username
+        passwordKey: password
+
+  persistence:
+    enabled: false
+
+  uploadsVolume:
+    existingVolumeClaim:
+      claimName: graph-automation-chunker-nfs
+
+  # Resource configurations for the Chunker Sectioning pods.
+  resources:
+    limits:
+      memory: 1Gi
+    requests:
+      memory: 1Gi
+
+  # Selector labels to match when selecting nodes.
+  nodeSelector: {}
+
+  # Configurations for spreading Pods across different failure domains.
+  topologySpreadConstraints: []
+
+  # The Chunker Sectioning does not expose an HTTP API.
+  service:
+    enabled: false
+
+  # The Sectioning service does not expose any health checks currently
+  startupProbe: null
+  readinessProbe: null
+  livenessProbe: null

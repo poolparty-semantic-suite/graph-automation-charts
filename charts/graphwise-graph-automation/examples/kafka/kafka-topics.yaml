@@ -1,0 +1,68 @@
+#
+# TOPICS
+#
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-morphkgc-jobs
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: graph-automation.morphkgc.jobs
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-morphkgc-results
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: graph-automation.morphkgc.results
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-chunker-store
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: graph-automation.chunker.store
+  partitions: 2
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-chunker-parse
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: graph-automation.chunker.parse
+  partitions: 2
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-chunker-sectioning
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: graph-automation.chunker.sectioning
+  partitions: 2
+  replicas: 1
+  config:
+    retention.ms: 86400000
