@@ -5,8 +5,21 @@ metadata:
 spec:
   instances: 1
   storage:
-    size: 1Gi
+    size: 10Gi
   bootstrap:
     initdb:
       database: graph-automation
       owner: graph-automation
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: graph-automation-chunker-postgres
+spec:
+  instances: 1
+  storage:
+    size: 10Gi
+  bootstrap:
+    initdb:
+      database: chunker
+      owner: chunker

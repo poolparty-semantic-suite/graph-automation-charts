@@ -8,19 +8,66 @@
                                                     by Graphwise
 -----------------------------------------------------------------------------------------------------------------------
 
-Chart version = {{ .Chart.Version }}
-
-{{- if .Values.workflows.enabled }}
+Chart version: {{ .Chart.Version }}
 {{ "" }}
+{{- if .Values.workflows.enabled }}
 Graphwise Workflows are enabled
-  url = {{ include "graphwise-workflows.external-url" .Subcharts.workflows }}
-  chart version = {{ .Subcharts.workflows.Chart.Version }}
-  image = {{ include "graphwise-workflows.image" .Subcharts.workflows }}
-  replicas = {{ .Values.workflows.replicas }}
-  task runers = {{ include "graphwise-workflows.runners.mode" .Subcharts.workflows }}
+  url: {{ include "graphwise-workflows.external-url" .Subcharts.workflows }}
+  chart version: {{ .Subcharts.workflows.Chart.Version }}
+  image: {{ include "graphwise-workflows.image" .Subcharts.workflows }}
+  replicas: {{ .Values.workflows.replicas }}
+  task runers:
+    mode: {{ include "graphwise-workflows.runners.mode" .Subcharts.workflows }}
     {{- if .Values.workflows.runners.external }}
-    image = {{ include "graphwise-workflows.runners.image" .Subcharts.workflows }}
+    image: {{ include "graphwise-workflows.runners.image" .Subcharts.workflows }}
     {{- end }}
+{{- else }}
+Graphwise Workflows are disabled
+{{- end }}
+{{ "" }}
+{{- if .Values.morphkgc.enabled }}
+Graph Automation MorphKGC Kafka Worker is enabled
+  chart version: {{ .Subcharts.morphkgc.Chart.Version }}
+  image: {{ include "graphwise-graph-automation-morphkgc-worker.image" .Subcharts.morphkgc }}
+  replicas: {{ .Values.morphkgc.replicas }}
+{{- else }}
+Graph Automation MorphKGC Kafka Worker is disabled
+{{- end }}
+{{ "" }}
+{{- if .Values.chunkerAPI.enabled }}
+Graph Automation Chunker API is enabled
+  chart version: {{ .Subcharts.chunkerAPI.Chart.Version }}
+  image: {{ include "graphwise-graph-automation-chunker.image" .Subcharts.chunkerAPI }}
+  replicas: {{ .Values.chunkerAPI.replicas }}
+{{- else }}
+Graph Automation Chunker API is disabled
+{{- end }}
+{{ "" }}
+{{- if .Values.chunkerStore.enabled }}
+Graph Automation Chunker Store worker is enabled
+  chart version: {{ .Subcharts.chunkerStore.Chart.Version }}
+  image: {{ include "graphwise-graph-automation-chunker.image" .Subcharts.chunkerStore }}
+  replicas: {{ .Values.chunkerStore.replicas }}
+{{- else }}
+Graph Automation Chunker Store worker is disabled
+{{- end }}
+{{ "" }}
+{{- if .Values.chunkerParse.enabled }}
+Graph Automation Chunker Parse worker is enabled
+  chart version: {{ .Subcharts.chunkerParse.Chart.Version }}
+  image: {{ include "graphwise-graph-automation-chunker.image" .Subcharts.chunkerParse }}
+  replicas: {{ .Values.chunkerParse.replicas }}
+{{- else }}
+Graph Automation Chunker Parse worker is disabled
+{{- end }}
+{{ "" }}
+{{- if .Values.chunkerSectioning.enabled }}
+Graph Automation Chunker Sectioning worker is enabled
+  chart version: {{ .Subcharts.chunkerSectioning.Chart.Version }}
+  image: {{ include "graphwise-graph-automation-chunker.image" .Subcharts.chunkerSectioning }}
+  replicas: {{ .Values.chunkerSectioning.replicas }}
+{{- else }}
+Graph Automation Chunker Sectioning worker is disabled
 {{- end }}
 
 ** Please be patient while the chart is being deployed and services are available **

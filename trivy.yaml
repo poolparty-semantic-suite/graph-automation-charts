@@ -14,7 +14,7 @@ scan:
 
 misconfiguration:
   helm:
-    kube-version: "v1.32.0"
+    kube-version: "v1.34.0"
 
 severity:
   - MEDIUM

@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "graphwise-graph-automation-morphkgc-worker.fullname" . }}
+  namespace: {{ include "graphwise-graph-automation-morphkgc-worker.namespace" . }}
+  labels:
+    {{- include "graphwise-graph-automation-morphkgc-worker.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+data:
+  {{- if not (hasKey .Values.configuration.properties "KAFKA_BOOTSTRAP_SERVERS") }}
+  KAFKA_BOOTSTRAP_SERVERS: {{ .Values.configuration.kafka.servers }}
+  {{- end }}
+  {{- if not (hasKey .Values.configuration.properties "KAFKA_SECURITY_PROTOCOL") }}
+  KAFKA_SECURITY_PROTOCOL: {{ .Values.configuration.kafka.security.protocol }}
+  {{- end }}
+  {{- if hasPrefix "SASL" .Values.configuration.kafka.security.protocol }}
+    {{- if not (hasKey .Values.configuration.properties "KAFKA_SASL_MECHANISM") }}
+  KAFKA_SASL_MECHANISM: {{ .Values.configuration.kafka.security.sasl.mechanism }}
+    {{- end }}
+  {{- end }}
+  {{- if and (hasSuffix "SSL" .Values.configuration.kafka.security.protocol) .Values.configuration.kafka.security.sasl.ca.existingSecret  }}
+    {{- if not (hasKey .Values.configuration.properties "KAFKA_SASL_MECHANISM") }}
+  KAFKA_SSL_CAFILE: {{ trimSuffix "/" .Values.configuration.kafka.security.sasl.ca.mountPath }}/{{ .Values.configuration.kafka.security.sasl.ca.caKey }}
+    {{- end }}
+  {{- end }}
+  {{- if .Values.configuration.properties -}}
+    {{- range $key, $value := .Values.configuration.properties -}}
+      {{- if ne $value nil -}}
+        {{- printf "%s: %s" $key (tpl ($value | toString) $ | quote) | nindent 2 -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
