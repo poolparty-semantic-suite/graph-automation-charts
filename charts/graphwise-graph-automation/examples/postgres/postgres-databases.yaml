@@ -1,0 +1,33 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: graph-automation-workflows
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: workflows
+  owner: workflows
+  databaseReclaimPolicy: delete
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: graph-automation-ingestion
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: ingestion
+  owner: ingestion
+  databaseReclaimPolicy: delete
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: graph-automation-chunker
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: chunker
+  owner: chunker
+  databaseReclaimPolicy: delete

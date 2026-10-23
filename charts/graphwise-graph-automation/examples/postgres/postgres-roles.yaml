@@ -1,0 +1,51 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: graph-automation-workflows
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: workflows
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  inherit: true
+  passwordSecret:
+    name: graph-automation-postgres-workflows-user
+  databaseRoleReclaimPolicy: retain
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: graph-automation-ingestion
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: ingestion
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  inherit: true
+  passwordSecret:
+    name: graph-automation-postgres-ingestion-user
+  databaseRoleReclaimPolicy: retain
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: DatabaseRole
+metadata:
+  name: graph-automation-chunker
+spec:
+  cluster:
+    name: graph-automation-postgres
+  name: chunker
+  login: true
+  superuser: false
+  createdb: false
+  createrole: false
+  inherit: true
+  passwordSecret:
+    name: graph-automation-postgres-chunker-user
+  databaseRoleReclaimPolicy: retain

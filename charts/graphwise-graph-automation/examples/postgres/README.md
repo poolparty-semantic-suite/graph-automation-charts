@@ -23,10 +23,29 @@ helm upgrade \
 
 ## Install
 
-To install the database in the `default` namespace, execute:
+To install the database in the `default` namespace, you first need to create a few database credentials:
 
 ```shell
-kubectl apply -f database.yaml
+kubectl create secret generic graph-automation-postgres-workflows-user \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=workflows \
+  --from-literal=password="$(openssl rand -hex 24)"
+kubectl create secret generic graph-automation-postgres-ingestion-user \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=ingestion \
+  --from-literal=password="$(openssl rand -hex 24)"
+kubectl create secret generic graph-automation-postgres-chunker-user \
+  --type=kubernetes.io/basic-auth \
+  --from-literal=username=chunker \
+  --from-literal=password="$(openssl rand -hex 24)"
+```
+
+And then execute:
+
+```shell
+kubectl apply -f postgres-cluster.yaml
+kubectl apply -f postgres-roles.yaml
+kubectl apply -f postgres-databases.yaml
 ```
 
 After the database is ready, you can configure the chart to use it:
@@ -48,5 +67,7 @@ workflows:
 You can uninstall the database with:
 
 ```shell
-kubectl delete -f database.yaml
+kubectl delete -f postgres-databases.yaml
+kubectl delete -f postgres-roles.yaml
+kubectl delete -f postgres-cluster.yaml
 ```
