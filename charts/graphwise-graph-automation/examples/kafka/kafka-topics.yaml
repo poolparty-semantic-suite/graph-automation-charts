@@ -1,5 +1,74 @@
 #
-# TOPICS
+# Topics for Document Ingestion workflows
+#
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-document-ingestion-tagging
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: ingestion-step-tagging
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-document-ingestion-vectorization
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: ingestion-step-vectorization
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-document-ingestion-faceting
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: ingestion-step-faceting
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-document-ingestion-rdfization
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: ingestion-step-rdfization
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+apiVersion: kafka.strimzi.io/v1
+kind: KafkaTopic
+metadata:
+  name: graph-automation-document-ingestion-chunking
+  labels:
+    strimzi.io/cluster: graph-automation
+spec:
+  topicName: ingestion-step-chunking
+  partitions: 8
+  replicas: 1
+  config:
+    retention.ms: 86400000
+---
+#
+# Topics for Morph-KGC
 #
 ---
 apiVersion: kafka.strimzi.io/v1
@@ -27,6 +96,10 @@ spec:
   replicas: 1
   config:
     retention.ms: 86400000
+---
+#
+# Topics for Document Chunker services
+#
 ---
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaTopic
