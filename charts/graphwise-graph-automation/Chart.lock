@@ -1,7 +1,7 @@
 dependencies:
 - name: graphwise-workflows
   repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
-  version: 0.3.0
+  version: 0.4.0-RC1
 - name: graphwise-graph-automation-morphkgc-worker
   repository: file://../graphwise-graph-automation-morphkgc
   version: 0.1.0
@@ -17,5 +17,5 @@ dependencies:
 - name: graphwise-graph-automation-chunker
   repository: file://../graphwise-graph-automation-chunker
   version: 0.1.0
-digest: sha256:62d37f3e4a8fc03d92d928afd1f0925e8ce60284e83c27853fd6202b33b16a9b
-generated: "2026-10-14T18:01:44.118765732+03:00"
+digest: sha256:1a623b5ad271354117d2c3f2e0bd25afef826cb122c6a20edcf1a8acf71b9f3a
+generated: "2026-10-27T07:43:02.483381771+02:00"

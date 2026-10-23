@@ -2,6 +2,21 @@
 
 Changelog for the Graphwise Graph Automation umbrella Helm chart.
 
+## 0.3.0-RC1
+
+### Breaking
+
+- Updated the PostgreSQL examples to deploy a set of databases in the same PostgreSQL cluster, each with a different role
+
+### Updates
+
+- Updated the default values for all PostgreSQL configurations to use the new examples
+- Updated the Kafka example to create a set of Document Ingestion topics and a new user for them
+- Updated the Workflows configurations to enable the command execution node
+- Updated the `graphwise-workflows` dependency to **0.4.0-RC1**
+- Updated the image of the `graphwise-runners` to **1.0.0-RC1**
+- Updated the image of the `morphkgc-kafka-worker` to **0.4.0**
+
 ## 0.2.0
 
 ### New

@@ -50,7 +50,9 @@ workflows:
     # Uncomment the next section to provide configurations as environment variables.
     # Values are processed as Helm templates.
     # Ref: https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables
-    # environment: {}
+    environment:
+      # Enables the execute node, needed by the document ingestion workflows
+      NODES_EXCLUDE: '[]'
 
     # Encryption key for Workflows credentials.
     # If not provided, the Workflows will generate a random key.
@@ -67,13 +69,13 @@ workflows:
     # Tune these according to your environment if you have your own PostgreSQL cluster.
     # Ref: https://docs.n8n.io/hosting/configuration/environment-variables/database/#postgresql
     postgresdb:
-      host: graph-automation-workflows-postgres-rw
+      host: graph-automation-postgres-rw
       port: 5432
-      database: graph-automation
+      database: workflows
       credentials:
         # Reference to a Secret containing the credentials for connecting to the PostgreSQL database.
         # The value is processed as a Helm template.
-        existingSecret: graph-automation-workflows-postgres-app
+        existingSecret: graph-automation-postgres-workflows-user
         # Name of the key in the existing secret that contains the username.
         usernameKey: username
         # Name of the key in the existing secret that contains the password.
@@ -138,6 +140,10 @@ workflows:
     # Defaulting to external task runners.
     external: true
 
+    # Overrides the version of the runners, because it is different from the graphwise-workflows one...
+    image:
+      tag: 1.0.0-RC1
+
     # Graphwise Workflows task runners configuration settings.
     configuration:
       # Authentication token for the Workflows task runners and the main Workflows instances.
@@ -172,6 +178,10 @@ workflows:
 morphkgc:
   # Toggles the deployment of the GraphRAG Workflows.
   enabled: true
+
+  # Overrides the version of the application with newer.
+  image:
+    tag: 0.4.0
 
   # Name and name prefix for the Morph-KGC worker resources.
   nameOverride: morph-kgc
@@ -268,9 +278,9 @@ chunkerAPI:
 
     # Configurations for connecting the Chunker service to a PostgreSQL database.
     postgresdb:
-      host: graph-automation-chunker-postgres-rw
+      host: graph-automation-postgres-rw
       credentials:
-        existingSecret: graph-automation-chunker-postgres-app
+        existingSecret: graph-automation-postgres-chunker-user
         usernameKey: username
         passwordKey: password
 
@@ -333,9 +343,9 @@ chunkerStore:
 
     # Configurations for connecting the Chunker service to a PostgreSQL database.
     postgresdb:
-      host: graph-automation-chunker-postgres-rw
+      host: graph-automation-postgres-rw
       credentials:
-        existingSecret: graph-automation-chunker-postgres-app
+        existingSecret: graph-automation-postgres-chunker-user
         usernameKey: username
         passwordKey: password
 
@@ -407,9 +417,9 @@ chunkerParse:
 
     # Configurations for connecting the Chunker service to a PostgreSQL database.
     postgresdb:
-      host: graph-automation-chunker-postgres-rw
+      host: graph-automation-postgres-rw
       credentials:
-        existingSecret: graph-automation-chunker-postgres-app
+        existingSecret: graph-automation-postgres-chunker-user
         usernameKey: username
         passwordKey: password
 
@@ -481,9 +491,9 @@ chunkerSectioning:
 
     # Configurations for connecting the Chunker service to a PostgreSQL database.
     postgresdb:
-      host: graph-automation-chunker-postgres-rw
+      host: graph-automation-postgres-rw
       credentials:
-        existingSecret: graph-automation-chunker-postgres-app
+        existingSecret: graph-automation-postgres-chunker-user
         usernameKey: username
         passwordKey: password
 

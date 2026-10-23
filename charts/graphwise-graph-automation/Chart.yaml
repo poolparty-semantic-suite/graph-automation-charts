@@ -5,7 +5,7 @@ apiVersion: v2
 name: graphwise-graph-automation
 description: Umbrella chart for deploying Graphwise Graph Automation services
 type: application
-version: 0.2.0
+version: 0.3.0-RC1
 kubeVersion: ^1.34.0-0
 home: https://graphwise.ai/
 icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
@@ -22,9 +22,9 @@ keywords:
   - database
   - knowledge
 dependencies:
-  # Graphwise Workflows 1.0.0-RC1
+  # Graphwise Workflows 1.0.0
   - name: graphwise-workflows
-    version: 0.3.0
+    version: 0.4.0-RC1
     repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
     alias: workflows
     condition: workflows.enabled
