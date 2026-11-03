@@ -4,6 +4,12 @@ Changelog for the Graphwise Graph Automation umbrella Helm chart.
 
 ## 0.3.0
 
+### Updates
+
+- Updated the graphwise-graph-automation-morphkgc-worker chart to version 0.2.0 with MorphKGC Kafka worker 1.0.0
+
+## 0.3.0
+
 ### Breaking
 
 - Updated the PostgreSQL examples to deploy a set of databases in the same PostgreSQL cluster, each with a different role
