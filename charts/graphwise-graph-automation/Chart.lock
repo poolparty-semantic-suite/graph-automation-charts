@@ -4,7 +4,7 @@ dependencies:
   version: 0.4.0
 - name: graphwise-graph-automation-morphkgc-worker
   repository: file://../graphwise-graph-automation-morphkgc
-  version: 0.1.0
+  version: 0.2.0
 - name: graphwise-graph-automation-chunker
   repository: file://../graphwise-graph-automation-chunker
   version: 0.1.0
@@ -17,5 +17,5 @@ dependencies:
 - name: graphwise-graph-automation-chunker
   repository: file://../graphwise-graph-automation-chunker
   version: 0.1.0
-digest: sha256:b869d441dc786d10403c85eb7df1798c8ce8031ec5c7ea1d28cf537f20b43b89
-generated: "2026-11-03T11:31:07.758949031+02:00"
+digest: sha256:f3e1318c73bf381403fddfc33f7c93af1a6ad124bb4858413d29c13b7879ad95
+generated: "2026-11-03T11:38:09.020701509+02:00"
