@@ -218,6 +218,17 @@ configuration:
       # Name of the key in the existing Secret that contains the password.
       passwordKey: DATABASE_PASSWORD
 
+# Security configurations for the Document Chunker.
+security:
+  # Configurations for a secure token that protects the REST API of the Document Chunker.
+  # Applicable only when it's running in API mode (see configuration.mode).
+  token:
+    # Reference to a Secret containing the secure token.
+    # The value is processed as a Helm template.
+    existingSecret: ""
+    # Name of the key in the existing Secret that contains the token.
+    tokenKey: SECRET_TOKEN
+
 ##########################
 # Ingress Configurations #
 ##########################
@@ -265,7 +276,6 @@ ingress:
 ##########################
 
 # Configurations for Graph Automation Chunker Service.
-# Important: These are valid only when configuraiton.mode = "api"
 # Ref: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # Enables or disables the Service deployment
@@ -406,10 +416,10 @@ args: []
 
 # Ports used by the Graph Automation Chunker container
 # Note: If you want to add additional ports, use .Values.extraContainerPorts.
-# Important: These are valid only when configuraiton.mode = "api"
 containerPorts:
   # Port mapped to Graph Automation Chunker HTTP API.
   http: 8000
+  health: 8001
 
 # Additional labels to append to the Pod definition.
 # Values are processed as Helm templates.
@@ -502,14 +512,13 @@ resources:
 #########################
 
 # Kubernetes probes configurations.
-# Important: These are valid only when configuraiton.mode = "api"
 # Ref: https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/
 
 # Configurations for the Graph Automation Chunker container startup probe.
 startupProbe:
   httpGet:
-    path: /health
-    port: http
+    path: /healthz
+    port: health
   failureThreshold: 300
   timeoutSeconds: 1
   periodSeconds: 3
@@ -517,15 +526,16 @@ startupProbe:
 # Configurations for the Graph Automation Chunker container readiness probe.
 readinessProbe:
   httpGet:
-    path: /health
-    port: http
+    path: /healthz
+    port: health
   timeoutSeconds: 5
   periodSeconds: 10
 
 # Configurations for the Graph Automation Chunker container liveness probe.
 livenessProbe:
-  tcpSocket:
-    port: http
+  httpGet:
+    path: /healthz
+    port: health
   initialDelaySeconds: 60
   timeoutSeconds: 5
   periodSeconds: 10

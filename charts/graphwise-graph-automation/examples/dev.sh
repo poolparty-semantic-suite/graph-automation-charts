@@ -127,5 +127,13 @@ kubectl -n "${NAMESPACE}" wait kafka/graph-automation \
   --timeout=300s
 
 ################################################################################################
+# Secrets
+################################################################################################
+
+echo "Creating secret/graph-automation-chunker-api-token..."
+kubectl -n "${NAMESPACE}" create secret generic graph-automation-chunker-api-token \
+        --from-literal=SECRET_TOKEN="$(openssl rand -hex 32)"
+
+################################################################################################
 
 echo "Done"

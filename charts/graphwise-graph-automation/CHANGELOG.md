@@ -2,7 +2,19 @@
 
 Changelog for the Graphwise Graph Automation umbrella Helm chart.
 
-## 0.3.0
+## 0.5.0
+
+### New
+
+- The Workflows are now being bootstrapped using the `graph-automation/workflows-bootstrap:1.1.0` container image, see
+  `workflows.bootstrap`.
+
+### Updates
+
+- Updated the graphwise-graph-automation-morphkgc-worker chart to version 0.3.0 with MorphKGC Kafka worker 1.1.0
+- Updated the graphwise-graph-automation-chunker charts to version 0.2.0 with Document Chunker 1.1.0
+
+## 0.4.0
 
 ### Updates
 
@@ -12,7 +24,8 @@ Changelog for the Graphwise Graph Automation umbrella Helm chart.
 
 ### Breaking
 
-- Updated the PostgreSQL examples to deploy a set of databases in the same PostgreSQL cluster, each with a different role
+- Updated the PostgreSQL examples to deploy a set of databases in the same PostgreSQL cluster, each with a different
+  role
 
 ### Updates
 
