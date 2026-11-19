@@ -166,6 +166,24 @@ workflows:
         memory: 256Mi
         cpu: 100m
 
+  ######################################
+  # Workflows Bootstrap Configurations #
+  ######################################
+
+  # This is a Kubernetes Job wrapped as a Helm hook that runs after the initial deployment.
+  bootstrap:
+    # Toggles the bootstrap Job deployment.
+    enabled: true
+    # Helm hook configurations.
+    hook:
+      annotations:
+        # You can use post-upgrade as well, if needed.
+        helm.sh/hook: post-install
+    image:
+      # The image used for the bootstrap Job.
+      repository: graph-automation/workflows-bootstrap
+      tag: 1.1.0
+
 ####################################################################
 # Graphwise Graph Automation Morph-KGC Kafka worker configurations #
 ####################################################################
@@ -276,6 +294,10 @@ chunkerAPI:
         usernameKey: username
         passwordKey: password
 
+  security:
+    token:
+      existingSecret: graph-automation-chunker-api-token
+
   persistence:
     enabled: false
 
@@ -295,6 +317,11 @@ chunkerAPI:
 
   # Configurations for spreading Pods across different failure domains.
   topologySpreadConstraints: []
+
+  # The API service does not expose any health checks currently
+  startupProbe: null
+  readinessProbe: null
+  livenessProbe: null
 
 ####################################################################
 # Graphwise Graph Automation Document Chunker Store configurations #
@@ -365,11 +392,6 @@ chunkerStore:
   service:
     enabled: false
 
-  # The Store service does not expose any health checks currently
-  startupProbe: null
-  readinessProbe: null
-  livenessProbe: null
-
 ####################################################################
 # Graphwise Graph Automation Document Chunker Parse configurations #
 ####################################################################
@@ -439,11 +461,6 @@ chunkerParse:
   service:
     enabled: false
 
-  # The Parse service does not expose any health checks currently
-  startupProbe: null
-  readinessProbe: null
-  livenessProbe: null
-
 #########################################################################
 # Graphwise Graph Automation Document Chunker Sectioning configurations #
 #########################################################################
@@ -512,8 +529,3 @@ chunkerSectioning:
   # The Chunker Sectioning does not expose an HTTP API.
   service:
     enabled: false
-
-  # The Sectioning service does not expose any health checks currently
-  startupProbe: null
-  readinessProbe: null
-  livenessProbe: null
