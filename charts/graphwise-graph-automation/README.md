@@ -58,6 +58,15 @@ workflows:
         existingSecret: "graph-automation-runners-token"
 ```
 
+### Document Chunker API
+
+You need to generate and provide a secure token to the Document Chunker API service by storing it in a Secret, e.g.:
+
+```shell
+kubectl create secret generic graph-automation-chunker-api-token \
+        --from-literal=SECRET_TOKEN="$(openssl rand -hex 32)"
+```
+
 ### Examples
 
 Check under [examples/](examples) for sample configurations for development and testing:
