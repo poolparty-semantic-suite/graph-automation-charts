@@ -2,6 +2,61 @@ apiVersion: v1
 entries:
   graphwise-graph-automation:
   - apiVersion: v2
+    created: "2026-11-23T12:46:20.745232509Z"
+    dependencies:
+    - alias: workflows
+      condition: workflows.enabled
+      name: graphwise-workflows
+      repository: https://poolparty-semantic-suite.github.io/graphwise-workflows-chart
+      version: 0.5.0
+    - alias: morphkgc
+      condition: morphkgc.enabled
+      name: graphwise-graph-automation-morphkgc-worker
+      repository: file://../graphwise-graph-automation-morphkgc
+      version: 0.3.0
+    - alias: chunkerAPI
+      condition: chunkerAPI.enabled
+      name: graphwise-graph-automation-chunker
+      repository: file://../graphwise-graph-automation-chunker
+      version: 0.2.0
+    - alias: chunkerStore
+      condition: chunkerStore.enabled
+      name: graphwise-graph-automation-chunker
+      repository: file://../graphwise-graph-automation-chunker
+      version: 0.2.0
+    - alias: chunkerParse
+      condition: chunkerParse.enabled
+      name: graphwise-graph-automation-chunker
+      repository: file://../graphwise-graph-automation-chunker
+      version: 0.2.0
+    - alias: chunkerSectioning
+      condition: chunkerSectioning.enabled
+      name: graphwise-graph-automation-chunker
+      repository: file://../graphwise-graph-automation-chunker
+      version: 0.2.0
+    description: Umbrella chart for deploying Graphwise Graph Automation services
+    digest: 450794f6ebe0c9b81f8b29edff753aef2c3f5a75317b59bb1089a13afe363e2d
+    home: https://graphwise.ai/
+    icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+    keywords:
+    - graphwise
+    - graph
+    - automation
+    - database
+    - knowledge
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: support@graphwise.ai
+      name: poolparty-semantic-suite
+      url: https://graphwise.ai
+    name: graphwise-graph-automation
+    sources:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-0.5.0/graphwise-graph-automation-0.5.0.tgz
+    version: 0.5.0
+  - apiVersion: v2
     created: "2026-11-03T13:13:52.257544339Z"
     dependencies:
     - alias: workflows
@@ -253,6 +308,31 @@ entries:
     version: 0.1.0
   graphwise-graph-automation-chunker:
   - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2026-11-23T12:46:20.933195159Z"
+    description: Document chunker service for the Graphwise Graph Automation bundle
+    digest: 97978d4b381e0592f97845ad218b542131d9b2014af1d1372c7ff4d9e1d65dbc
+    home: https://graphwise.ai/
+    icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+    keywords:
+    - graphwise
+    - graph
+    - automation
+    - database
+    - knowledge
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: support@graphwise.ai
+      name: poolparty-semantic-suite
+      url: https://graphwise.ai
+    name: graphwise-graph-automation-chunker
+    sources:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-chunker-0.2.0/graphwise-graph-automation-chunker-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 0.1.0
     created: "2026-10-19T06:30:44.689354541Z"
     description: Document chunker service for the Graphwise Graph Automation bundle
@@ -278,6 +358,32 @@ entries:
     - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-chunker-0.1.0/graphwise-graph-automation-chunker-0.1.0.tgz
     version: 0.1.0
   graphwise-graph-automation-morphkgc-worker:
+  - apiVersion: v2
+    appVersion: 1.1.0
+    created: "2026-11-23T12:46:21.111988685Z"
+    description: Morph-KGC Kafka worker for the Graphwise Graph Automation bundle
+    digest: a77363daaa4c10a150e7306ac799bbdd31d69df5ec29398d71c860a0d6713787
+    home: https://graphwise.ai/
+    icon: https://graphwise.ai/wp-content/uploads/2024/10/cropped-graphwise_favicon-192x192.png
+    keywords:
+    - graphwise
+    - graph
+    - automation
+    - database
+    - knowledge
+    - rml
+    kubeVersion: ^1.34.0-0
+    maintainers:
+    - email: support@graphwise.ai
+      name: poolparty-semantic-suite
+      url: https://graphwise.ai
+    name: graphwise-graph-automation-morphkgc-worker
+    sources:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts
+    type: application
+    urls:
+    - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-morphkgc-worker-0.3.0/graphwise-graph-automation-morphkgc-worker-0.3.0.tgz
+    version: 0.3.0
   - apiVersion: v2
     appVersion: 1.0.0
     created: "2026-11-03T13:13:52.588570423Z"
@@ -330,4 +436,4 @@ entries:
     urls:
     - https://github.com/poolparty-semantic-suite/graph-automation-charts/releases/download/graphwise-graph-automation-morphkgc-worker-0.1.0/graphwise-graph-automation-morphkgc-worker-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-03T13:13:52.588591695Z"
+generated: "2026-11-23T12:46:21.112020963Z"
